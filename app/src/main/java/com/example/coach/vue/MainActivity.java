@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        this.controle = Controle.getInstance();
     }
 
     //propriétés
@@ -31,9 +30,11 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtTaille;
     private EditText txtAge;
     private RadioButton rdHomme;
+    private RadioButton rdFemme;
     private TextView lblIMG;
     private ImageView imgSmiley;
     private Controle controle;
+
 
     /**
      * initialisation des liens avec les objets graphiques
@@ -43,9 +44,12 @@ public class MainActivity extends AppCompatActivity {
         txtTaille = (EditText) findViewById(R.id.txtTaille);
         txtAge = (EditText) findViewById(R.id.txtAge);
         rdHomme = (RadioButton) findViewById(R.id.rdHomme);
+        rdFemme = (RadioButton) findViewById(R.id.rdFemme);
         lblIMG = (TextView) findViewById(R.id.lblIMG);
         imgSmiley = (ImageView) findViewById(R.id.imgSmiley);
         ecouteCalcul();
+        this.controle = Controle.getInstance(this);
+        recupProfil();
     }
 
     /**
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void afficheResult(Integer poids, Integer taille, Integer age, Integer sexe){
         //création du profil et récupération des informations
-        this.controle.creerProfil(poids, taille, age, sexe);
+        this.controle.creerProfil(poids, taille, age, sexe, this);
         float img = this.controle.getImg();
         String message = this.controle.getMessage();
         //affichage
@@ -105,5 +109,22 @@ public class MainActivity extends AppCompatActivity {
         }
         lblIMG.setText(String.format("%.01f", img)+" : IMG "+message);
 
+    }
+
+    /**
+     * Récupération du profil s'il a été serialisé
+     */
+    private void recupProfil(){
+        if(controle.getPoids() != null){
+            txtPoids.setText(controle.getPoids().toString());
+            txtTaille.setText(controle.getTaille().toString());
+            txtAge.setText(controle.getAge().toString());
+            rdFemme.setChecked(true);
+            if(controle.getSexe()==1) {
+                rdHomme.setChecked(true);
+            }
+            //Simule le clic sur le bouton calcul
+            ((Button)findViewById(R.id.btnCalc)).performClick();
+        }
     }
 }

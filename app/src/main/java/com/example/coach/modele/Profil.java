@@ -1,9 +1,11 @@
 package com.example.coach.modele;
 
+import java.io.Serializable;
+
 /**
  * Created by Nessprog on 21/01/2024
  */
-public class Profil {
+public class Profil implements Serializable {
 
     //constantes
     private static final Integer minFemme = 15; //maigre si en dessous
