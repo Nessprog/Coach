@@ -2,14 +2,18 @@ package com.example.coach.controleur;
 
 import android.content.Context;
 
+import com.example.coach.modele.AccesLocal;
 import com.example.coach.modele.Profil;
 import com.example.coach.outils.Serializer;
+
+import java.util.Date;
 
 public final class Controle {
 
     private static Controle instance = null;
     private static Profil profil;
     private static String nomFic = "saveprofil";
+    private static AccesLocal accesLocal;
 
     /**
      * Constructeur private
@@ -25,7 +29,9 @@ public final class Controle {
     public static final Controle getInstance(Context contexte){
         if(Controle.instance == null){
             Controle.instance = new Controle();
-            recupSerialize(contexte);
+            accesLocal = new AccesLocal(contexte);
+            profil = accesLocal.recupDernier();
+           // recupSerialize(contexte);
         }
         return Controle.instance;
     }
@@ -38,8 +44,9 @@ public final class Controle {
      * @param sexe 1 pour homme et 0 pour femme
      */
     public void creerProfil(Integer poids, Integer taille, Integer age, Integer sexe, Context contexte){
-        profil = new Profil(poids, taille, age, sexe);
-        Serializer.serialize(nomFic, profil, contexte);
+        profil = new Profil(new Date(),poids, taille, age, sexe);
+       // Serializer.serialize(nomFic, profil, contexte);
+        accesLocal.ajout(profil);
     }
 
     /**
